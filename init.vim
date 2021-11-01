@@ -33,8 +33,8 @@ call plug#begin(expand('~/.config/nvim/plugged'))
 "" Plug install packages
 "*****************************************************************************
 Plug 'airblade/vim-gitgutter'
-Plug 'nvim-lua/completion-nvim'
-Plug 'nvim-lua/plenary.nvim'
+"Plug 'nvim-lua/completion-nvim'
+"Plug 'nvim-lua/plenary.nvim'
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'tweekmonster/startuptime.vim'
@@ -42,7 +42,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'cohama/lexima.vim'
 Plug 'vim-scripts/grep.vim'
-Plug 'nvim-lua/popup.nvim'
+"Plug 'nvim-lua/popup.nvim'
 Plug 'vim-scripts/CSApprox'
 Plug 'Raimondi/delimitMate'
 Plug 'majutsushi/tagbar'
@@ -56,11 +56,18 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'lilydjwg/colorizer'
 Plug 'jiangmiao/auto-pairs'
-Plug 'Shougo/deoplete.nvim'
-Plug 'ervandew/supertab'
+"Plug 'Shougo/deoplete.nvim'
+"Plug 'ervandew/supertab'
 Plug 'neovim/nvim-lspconfig'
 Plug 'kabouzeid/nvim-lspinstall'
 Plug 'wakatime/vim-wakatime'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+Plug 'tpope/vim-surround'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'onsails/lspkind-nvim'
+Plug 'preservim/nerdcommenter'
 
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -77,19 +84,23 @@ Plug 'Shougo/vimproc.vim', {'do': g:make}
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
 "" Snippets
+" For vsnip users.
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
+
 Plug 'honza/vim-snippets'
 Plug 'SirVer/ultisnips'
 if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
+ Plug 'Shougo/deoplete.nvim'
+ Plug 'roxma/nvim-yarp'
+ Plug 'roxma/vim-hug-neovim-rpc'
 endif
 "let g:deoplete#enable_at_startup = 1
 
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
+"Plug 'Shougo/neosnippet.vim'
+"Plug 'Shougo/neosnippet-snippets'
 "*****************************************************************************
 "" Custom bundles
 "*****************************************************************************
@@ -99,12 +110,12 @@ Plug 'vim-scripts/c.vim', {'for': ['c', 'cpp']}
 Plug 'ludwig/split-manpage.vim'
 
 " elixir
-Plug 'elixir-lang/vim-elixir'
-Plug 'carlosgaldino/elixir-snippets'
+"Plug 'elixir-lang/vim-elixir'
+"Plug 'carlosgaldino/elixir-snippets'
 
 " go
 "" Go Lang Bundle
-Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
+"Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 
 " html
 "" HTML Bundle
@@ -159,33 +170,112 @@ filetype plugin indent on
 "*****************************************************************************"
 "" Encoding
 "lua configs
+"------------------------------------------------------------------
+set completeopt=menu,menuone,noselect
+ 
 lua << EOF
-  lspconfig = require'lspconfig'
-  completion_callback = require'completion'.on_attach
+  -- Setup nvim-cmp.
+  local on_attach = function(_, bufnr)
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-  lspconfig.pyright.setup{on_attach=completion_callback}
-  lspconfig.tsserver.setup{on_attach=completion_callback}
-  lspconfig.clangd.setup{on_attach=completion_callback}
+  local opts = { noremap = true, silent = true }
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'v', '<leader>ca', '<cmd>lua vim.lsp.buf.range_code_action()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>d', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
+  vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
+end
+
+  local cmp = require'cmp'
+
+  cmp.setup({
+    snippet = {
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+        -- require'snippy'.expand_snippet(args.body) -- For `snippy` users.
+      end,
+    },
+    mapping = {
+      ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.close(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    },
+  formatting = {
+  format = require("lspkind").cmp_format({with_text = true, menu = ({
+      buffer = "[Buffer]",
+      nvim_lsp = "[LSP]",
+      vsnip = "[vsnip]",
+      nvim_lua = "[Lua]",
+      latex_symbols = "[Latex]",
+    })}),
+},
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'vsnip' }, -- For vsnip users.
+      -- { name = 'luasnip' }, -- For luasnip users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  -- Setup lspconfig.
+  local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  local servers = { 'pyright', 'clangd', 'tsserver' }
+  for _, lsp in ipairs(servers) do
+    require('lspconfig')[lsp].setup {
+      on_attach = on_attach,
+      capabilities = capabilities
+    }
+  end
 EOF
-" Use <Tab> and <S-Tab> to navigate through popup menu
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-" Set completeopt to have a better completion experience
-set completeopt=menuone,noinsert,noselect
-
-" Avoid showing message extra message when using completion
-set shortmess+=c
-
-let g:completion_enable_auto_popup = 0
-imap <tab> <Plug>(completion_smart_tab)
-imap <s-tab> <Plug>(completion_smart_s_tab)
-sign define LspDiagnosticsSignError text=🔴
-sign define LspDiagnosticsSignWarning text=🟠
-sign define LspDiagnosticsSignInformation text=🔵
-sign define LspDiagnosticsSignHint text=🟢
 "------------------------------------------------------------------
-"------------------------------------------------------------------
+"NERD COMMENTER config
+"" Create default mappings
+let g:NERDCreateDefaultMappings = 1
+
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
+
+" Use compact syntax for prettified multi-line comments
+let g:NERDCompactSexyComs = 1
+
+" Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDDefaultAlign = 'left'
+
+" Set a language to use its alternate delimiters by default
+let g:NERDAltDelims_java = 1
+
+" Add your own custom formats or override the defaults
+let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }
+
+" Allow commenting and inverting empty lines (useful when commenting a region)
+let g:NERDCommentEmptyLines = 1
+
+" Enable trimming of trailing whitespace when uncommenting
+let g:NERDTrimTrailingWhitespace = 1
+
+" Enable NERDCommenterToggle to check all selected lines is commented or not 
+let g:NERDToggleCheckAllLines = 1
+"+=======================================
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
@@ -400,17 +490,16 @@ set autoread
 
 "" Split
 noremap <Leader>h :<C-u>split<CR>
-noremap <Leader>v :<C-u>vsplit<CR>
 
 "" Git
 noremap <Leader>ga :Gwrite<CR>
 noremap <Leader>gc :Git commit --verbose<CR>
 noremap <Leader>gsh :Gpush<CR>
 noremap <Leader>gll :Gpull<CR>
-noremap <Leader>gs :Gstatus<CR>
+noremap <Leader>gs :Git<CR>
 noremap <Leader>gb :Gblame<CR>
 noremap <Leader>gd :Gvdiff<CR>
-noremap <Leader>gr :Gremove<CR>
+noremap <Leader>gr :GRemove<CR>
 
 " session management
 nnoremap <leader>so :OpenSession<Space>
@@ -624,8 +713,8 @@ vmap <silent><Leader>em :<C-U>call phpactor#ExtractMethod()<CR>
 " vim-python
 augroup vimrc-python
   autocmd!
-  autocmd FileType python setlocal expandtab shiftwidth=2 tabstop=2 colorcolumn=79
-      \ formatoptions+=croq softtabstop=2
+  autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=4 colorcolumn=79
+      \ formatoptions+=croq softtabstop=4
       \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
 
@@ -719,3 +808,6 @@ endif
 nnoremap <Leader>q :q <CR> 
 nnoremap <Leader>e :q! <CR>
 nnoremap <Leader>; :w <CR>
+
+" markdown config
+nnoremap <C-v> :MarkdownPreview <CR> 

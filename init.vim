@@ -49,7 +49,6 @@ Plug 'editor-bootstrap/vim-bootstrap-updater'
 Plug 'tpope/vim-rhubarb' " required by fugitive to :Gbrowse
 Plug 'severij/vadelma' " Theme used
 Plug 'vim-airline/vim-airline'
-Plug 'ryanoasis/vim-devicons'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'lilydjwg/colorizer'
 Plug 'jiangmiao/auto-pairs'
@@ -65,6 +64,7 @@ Plug 'prettier/vim-prettier', {
   \ }
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'ervandew/supertab'
+Plug 'cj/vim-webdevicons'
 
 " lsp config 
 Plug 'neovim/nvim-lspconfig'
@@ -178,6 +178,7 @@ filetype plugin indent on
 "" Encoding
 "lua configs
 "------------------------------------------------------------------
+let g:webdevicons_enable = 1
 set completeopt=menu,menuone,noselect
 lua << EOF
   -- Setup nvim-cmp.
@@ -644,23 +645,23 @@ augroup END
 
 " php
 " Phpactor plugin
-" Include use statement
-nmap <Leader>u :call phpactor#UseAdd()<CR>
-" Invoke the context menu
-nmap <Leader>mm :call phpactor#ContextMenu()<CR>
-" Invoke the navigation menu
-nmap <Leader>nn :call phpactor#Navigate()<CR>
-" Goto definition of class or class member under the cursor
-nmap <Leader>oo :call phpactor#GotoDefinition()<CR>
-nmap <Leader>oh :call phpactor#GotoDefinitionHsplit()<CR>
-nmap <Leader>ov :call phpactor#GotoDefinitionVsplit()<CR>
-nmap <Leader>ot :call phpactor#GotoDefinitionTab()<CR>
-" Show brief information about the symbol under the cursor
-nmap <Leader>K :call phpactor#Hover()<CR>
-" Transform the classes in the current file
-nmap <Leader>tt :call phpactor#Transform()<CR>
-" Generate a new class (replacing the current file)
-nmap <Leader>cc :call phpactor#ClassNew()<CR>
+" " Include use statement
+" nmap <Leader>u :call phpactor#UseAdd()<CR>
+" " Invoke the context menu
+" nmap <Leader>mm :call phpactor#ContextMenu()<CR>
+" " Invoke the navigation menu
+" nmap <Leader>nn :call phpactor#Navigate()<CR>
+" " Goto definition of class or class member under the cursor
+" nmap <Leader>oo :call phpactor#GotoDefinition()<CR>
+" nmap <Leader>oh :call phpactor#GotoDefinitionHsplit()<CR>
+" nmap <Leader>ov :call phpactor#GotoDefinitionVsplit()<CR>
+" nmap <Leader>ot :call phpactor#GotoDefinitionTab()<CR>
+" " Show brief information about the symbol under the cursor
+" nmap <Leader>K :call phpactor#Hover()<CR>
+" " Transform the classes in the current file
+" nmap <Leader>tt :call phpactor#Transform()<CR>
+" " Generate a new class (replacing the current file)
+" nmap <Leader>cc :call phpactor#ClassNew()<CR>
 
 " python
 " vim-python
@@ -690,51 +691,51 @@ let g:jedi#smart_auto_mappings = 0
 let python_highlight_all = 1
 
 
-" ruby
-let g:rubycomplete_buffer_loading = 1
-let g:rubycomplete_classes_in_global = 1
-let g:rubycomplete_rails = 1
-
-augroup vimrc-ruby
-  autocmd!
-  autocmd BufNewFile,BufRead *.rb,*.rbw,*.gemspec setlocal filetype=ruby
-  autocmd FileType ruby set tabstop=2|set shiftwidth=2|set expandtab softtabstop=2
-augroup END
-
-let g:tagbar_type_ruby = {
-    \ 'kinds' : [
-        \ 'm:modules',
-        \ 'c:classes',
-        \ 'd:describes',
-        \ 'C:contexts',
-        \ 'f:methods',
-        \ 'F:singleton methods'
-    \ ]
-\ }
-
-" RSpec.vim mappings
-map <Leader>s :call RunNearestSpec()<CR>
-map <Leader>l :call RunLastSpec()<CR>
-map <Leader>a :call RunAllSpecs()<CR>
-
-" For ruby refactory
-if has('nvim')
-  runtime! macros/matchit.vim
-else
-  packadd! matchit
-endif
-
-" Ruby refactory
-nnoremap <leader>rap  :RAddParameter<cr>
-nnoremap <leader>rcpc :RConvertPostConditional<cr>
-nnoremap <leader>rel  :RExtractLet<cr>
-vnoremap <leader>rec  :RExtractConstant<cr>
-vnoremap <leader>relv :RExtractLocalVariable<cr>
-nnoremap <leader>rit  :RInlineTemp<cr>
-vnoremap <leader>rrlv :RRenameLocalVariable<cr>
-vnoremap <leader>rriv :RRenameInstanceVariable<cr>
-vnoremap <leader>rem  :RExtractMethod<cr>
-
+" " ruby
+" let g:rubycomplete_buffer_loading = 1
+" let g:rubycomplete_classes_in_global = 1
+" let g:rubycomplete_rails = 1
+"
+" augroup vimrc-ruby
+"   autocmd!
+"   autocmd BufNewFile,BufRead *.rb,*.rbw,*.gemspec setlocal filetype=ruby
+"   autocmd FileType ruby set tabstop=2|set shiftwidth=2|set expandtab softtabstop=2
+" augroup END
+"
+" let g:tagbar_type_ruby = {
+"     \ 'kinds' : [
+"         \ 'm:modules',
+"         \ 'c:classes',
+"         \ 'd:describes',
+"         \ 'C:contexts',
+"         \ 'f:methods',
+"         \ 'F:singleton methods'
+"     \ ]
+" \ }
+"
+" " RSpec.vim mappings
+" map <Leader>s :call RunNearestSpec()<CR>
+" map <Leader>l :call RunLastSpec()<CR>
+" map <Leader>a :call RunAllSpecs()<CR>
+"
+" " For ruby refactory
+" if has('nvim')
+"   runtime! macros/matchit.vim
+" else
+"   packadd! matchit
+" endif
+"
+" " Ruby refactory
+" nnoremap <leader>rap  :RAddParameter<cr>
+" nnoremap <leader>rcpc :RConvertPostConditional<cr>
+" nnoremap <leader>rel  :RExtractLet<cr>
+" vnoremap <leader>rec  :RExtractConstant<cr>
+" vnoremap <leader>relv :RExtractLocalVariable<cr>
+" nnoremap <leader>rit  :RInlineTemp<cr>
+" vnoremap <leader>rrlv :RRenameLocalVariable<cr>
+" vnoremap <leader>rriv :RRenameInstanceVariable<cr>
+" vnoremap <leader>rem  :RExtractMethod<cr>
+"
 " typescript
 let g:yats_host_keyword = 1
 
